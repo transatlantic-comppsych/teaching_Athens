@@ -1,0 +1,61 @@
+---
+title: "Teaching Psych Trainees in EBM"
+author: "Argyris Stringaris"
+date: "2023-12-06"
+output:   pdf_document:
+      latex_engine: xelatex 
+      extra_dependencies: ["float"]
+  word_document: default
+urlcolor: blue
+---
+
+# My first R script
+```{r}
+
+my_name <- "Argyris"
+my_name
+
+my_numbers <- c(36,12,6)
+my_numbers
+```
+# My first normal distribution
+```{r}
+n <- 100
+n
+scores_for_depression <- rnorm(n, 14, 2)
+scores_for_depression
+hist(scores_for_depression)
+
+
+
+```
+
+
+
+```{r}
+ids = paste0("aiginiteion_",  1:n)
+ids
+
+```
+
+
+```{r}
+aiginiteion_dep <- data.frame(
+  ids = paste0("aiginiteion_",  1:n),
+  dep_score = round(rnorm(n, 14, 2), 0)
+)
+
+head(aiginiteion_dep)
+# rows, columns
+dim(aiginiteion_dep)
+```
+
+
+```{r}
+community_dep <- data.frame(
+  ids = paste0("community_", 1:n),
+  dep_score = round(rnorm(n, 8, 2), 0)
+)
+head(community_dep)
+```
+

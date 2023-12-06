@@ -1,0 +1,64 @@
+---
+title: "athens_teaching_code"
+author: "Argyris Stringaris"
+date: "2023-12-06"
+output: pdf_document
+---
+
+
+# A small tour in objects? Character vectors
+```{r, echo=FALSE, message=FALSE,warning = FALSE}
+my_name <- "Argyris"  # I just assigned a character Argyris, which always has to be in quotations to my_name. Now my_name is an # object saved in the memory of the computer.
+my_name # if you run this you will see Argyris as an output
+class(my_name) # class is a functionn, a command that asks the computer what kind of object it sees.
+```
+
+# A small tour in objects? Number vectors
+```{r, echo=FALSE, message=FALSE,warning = FALSE}
+my_numbers <- c(36,12,6)
+my_numbers
+```
+
+# A small tour in objects. Lists
+```{r, echo=FALSE, message=FALSE,warning = FALSE}
+numbers_and_characters <- list(my_numbers, my_name) # list in this case is a command that tells R to create a list of the objects             #that are in the brackets. Lists are super useful and they can store pretty much any object.
+numbers_and_characters
+```
+
+# Creating Data
+We are now going to create in a gradual fashion a dataframe, which is R's way to call databases. 
+Let's think of the following problem. 
+You work at Aiginiteion Hospital in Athens. 
+Let's say you want to measure depression in your patients there. 
+And you want to compare those values of depression with the depression scores that you get in the community. 
+You could go and collect data to find out--and eventually you may have to do it.
+But before doing it, you want to prepare properly (this is very important--we will come back to its importance)
+How do we prepare? 
+By simulating. 
+
+For the purposes of our study we are going to simulate data from 100 patients and another from 100 community-dwelling individuals
+
+Here I tell the computer my number of subject **per group** 
+```{r, echo=FALSE, message=FALSE,warning = FALSE}
+n <- 100 
+```
+
+
+- exercise 1.1: vary this number 
+
+
+Here I create my first data frame, that for Aiginiteion
+```{r, echo=FALSE, message=FALSE,warning = FALSE}
+aiginiteion_dep <- data.frame(
+  ids = paste0("aiginiteion_",  1:n),
+  dep_score = round(rnorm(n, 14, 2), 0)
+)
+```
+
+
+```{r}
+library(tidyverse)
+aiginiteion_dep %>% 
+  ggplot(aes(x = dep_score))+
+  geom_histogram(position = "identity")
+```

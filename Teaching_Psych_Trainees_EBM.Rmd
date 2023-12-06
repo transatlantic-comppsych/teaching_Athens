@@ -1,0 +1,86 @@
+---
+title: "Request for Salary Increase"
+author: "Argyris Stringaris"
+date: "6th December 2023"
+output:
+  extra_dependencies: default
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: float
+urlcolor: blue
+---
+
+
+
+# what is an object?
+```{r setup, include=FALSE}
+my_name <- "Argyris"
+my_name
+class(my_name)
+```
+
+```{r}
+n <- 10
+```
+
+
+```{r}
+aiginiteion_dep <- data.frame(
+  ids = paste0("aiginiteion_",  1:n),
+  dep_score = round(rnorm(n, 14, 2), 0)
+)
+```
+
+
+```{r}
+library(tidyverse)
+aiginiteion_dep %>% 
+  ggplot(aes(x = dep_score))+
+  geom_histogram(position = "identity")
+```
+
+
+```{r}
+community_dep <- data.frame(
+  ids = paste0("community_",  1:n),
+  dep_score = round(rnorm(n, 8, 2), 0)
+)
+```
+
+
+```{r}
+library(tidyverse)
+community_dep %>% 
+  ggplot(aes(x = dep_score))+
+  geom_histogram(position = "identity")
+```
+
+
+```{r}
+combined_df <- rbind(aiginiteion_dep, community_dep)
+head(combined_df)
+tail(combined_df)
+dim(combined_df)
+install.packages("tidyverse")
+library(tidyverse)
+combined_df <- combined_df %>% 
+  mutate(location = case_when(str_detect(combined_df$ids, "aiginiteion")~ "aiginiteion", 
+                   str_detect(combined_df$ids, "community")~ "community") )
+
+head(combined_df)
+tail(combined_df)
+```
+
+
+```{r}
+combined_df %>% 
+  ggplot(aes(dep_score, fill = location))+
+  geom_density( alpha = 0.5, bins = 100)
+  
+```
+```{r}
+t.test(dep_score~ location, data = combined_df)
+```
+
+
