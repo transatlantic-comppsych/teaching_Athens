@@ -1,31 +1,67 @@
 ---
-title: "athens_teaching_code"
+title: "Aiginiteion Teaching Evidence-Based Psychiatry"
 author: "Argyris Stringaris"
 date: "2023-12-06"
 output: pdf_document
 ---
 
+# First Hands-On Lecture on Coding and Basic Applied Statistics 
 
-# A small tour in objects? Character vectors
-```{r, echo=FALSE, message=FALSE,warning = FALSE}
-my_name <- "Argyris"  # I just assigned a character Argyris, which always has to be in quotations to my_name. Now my_name is an # object saved in the memory of the computer.
-my_name # if you run this you will see Argyris as an output
-class(my_name) # class is a functionn, a command that asks the computer what kind of object it sees.
+## Intro
+These are the notes from the first hands-on lecture. 
+The purpose is to get exposed to stats the proper way, i.e. by writing code. 
+Learning to write code will equip you to solve many problems in your research and clinical practice. It can also be a sources of great fun.
+Here we cover the basics. I have and will again refer you to standard works on the topic for a deeper understanding.
+There are two main things you need to know about R. 
+There are **objects** and there are **functions**
+Think of functions as being active verbs and objects being nouns:functions do something with objects. 
+There is also one more thing you need to know: the **assignment operator** which is symbolised as <- 
+I will illustrate these things below.
+
+
+## A small tour in objects? Character vectors
+```{r}
+my_name <- "Argyris"   
+my_name 
+class(my_name) 
 ```
 
-# A small tour in objects? Number vectors
-```{r, echo=FALSE, message=FALSE,warning = FALSE}
+- I just assigned, using <-, the string of characters "Argyris", which always has to be in quotations to my_name. Think of my_name as a box, a repository that can contain things like a string of characteris. After you run this, my_name is an # object saved in the memory of the computer.
+
+- if you simply type _my_name_ and enter you will see Argyris as an output
+
+- _class_ is a function that asks the computer what kind of object it sees. It is an inbuilt function, R has already got this and you can use it. Notice that the function can only run if you put the brackets around _my_name_. 
+
+
+## A small tour in objects? Number vectors
+You can assign numbers, as I show below. 
+```{r}
 my_numbers <- c(36,12,6)
 my_numbers
 ```
 
-# A small tour in objects. Lists
-```{r, echo=FALSE, message=FALSE,warning = FALSE}
-numbers_and_characters <- list(my_numbers, my_name) # list in this case is a command that tells R to create a list of the objects             #that are in the brackets. Lists are super useful and they can store pretty much any object.
+- _my_numbers_ is now a number vector. Notice the = _c_ before the parentheses. It is a **function** and it means, combine the following elements (in this case numbers)
+
+## Exercise 1.1: 
+Use _c_ to create a vector that contains the names of you and two of your friendds. 
+
+
+## A small tour in objects. Lists
+Lists are also objects. They a very useful way of storing other objects. 
+```{r}
+
+numbers_and_characters <- list(my_numbers, my_name)
+
 numbers_and_characters
 ```
 
-# Creating Data
+-  list in this case is a function that tells R to create an object (in this case called _numbers_and_characters_) and to store in it a set of objects, namely those that are in the brackets. Lists are super useful and they can store pretty much any object.
+
+
+## A small tour in objects. Dataframes
+Dataframes are very important for anyone working with data. That's how datasets are generally stored. We will learn below how to do this.
+
+## Creating Data
 We are now going to create in a gradual fashion a dataframe, which is R's way to call databases. 
 Let's think of the following problem. 
 You work at Aiginiteion Hospital in Athens. 
@@ -38,27 +74,158 @@ By simulating.
 
 For the purposes of our study we are going to simulate data from 100 patients and another from 100 community-dwelling individuals
 
+## Number of subjects. 
 Here I tell the computer my number of subject **per group** 
 ```{r, echo=FALSE, message=FALSE,warning = FALSE}
 n <- 100 
 ```
+- Here I just assigned a number to _n_
 
-
-- exercise 1.1: vary this number 
-
-
+## My first simulated dataset
 Here I create my first data frame, that for Aiginiteion
-```{r, echo=FALSE, message=FALSE,warning = FALSE}
+```{r}
+set.seed(123)
+
 aiginiteion_dep <- data.frame(
   ids = paste0("aiginiteion_",  1:n),
   dep_score = round(rnorm(n, 14, 2), 0)
 )
 ```
 
+- Let's break this down. Ignore the set.seed command for the moment, i will explain this below.
 
-```{r}
+- Let's start with _data.frame_. This is a function that tells R to build a dataframe with the contents of what is in the brackets.
+
+- The first thing I create is the ids. Every patient needs to have an id. Here I do a trick. I use another function (yes, in R you can use functions within a function) which is called _paste_ . As the name implies, paste puts together the word "aiginiteion" with the numbers that come out of 1:n. 
+
+## Exercise 1.2. 
+a) use your name and that of your friends from exercise 1 and use the paste command to have them appear next to each other. b) type the following: your year of birth (e.g.1992) : 2023. What do you see? Now type length(your year of birth (e.g.1992) : 2023)--what do you see? What is length?
+
+- the second variable I create is the depression score. And here is where I use simulation. _rnorm_ is a function which generates _n_ **random** numbers from a normal distribution with the mean and standard deviation (sd) that we ask for. By having the size n, the mean and the sd, you can specify a normal distribution. In this case, I have specified n to be 100 (above) and gave it the mean of 14 and the sd of 2. I chose these numbers because one of my favourite depression questionnaires (the MFQ) had a mean of around 14 in my subject (though a broader sd). 
+
+## Exercise 1.3
+a) type ?rnorm into the console. What do you see on the right? b) type test <- rnorm(100,0,1) and then type test. What do you see? c) type hist(rnorm(100,0,1)) what do you see?
+ 
+- finally, what is _set_seed_? It is a function that initialises pseudorandmo numbers in R. It helps us generate reproducible results when we use functions that use random numbers, such as rnorm. The following exercise will clarify this. 
+
+## Exercise 1.4
+a) Type set.seed(123) and generate test_1 <- rnorm(10, 0, 1). type set.seed(123) and generate test_2 <- rnorm(10, 0, 1). Type test_1 and test_2. What do you see? type test_1 == test_2, what do you get?
+b)  type set.seed(456) and generate test_3 <- rnorm(10, 0, 1). Type test_3. What do you see? Try test_1 == test_3. What do you get? 
+Note: the double = denotes logical equality, such as when you ask: "Argyris" == "Argyris" should come out as TRUE, whereas "Argyris" == "Kostas" should not. But "Argyris" != "Kostas" should also be TRUE. 
+
+
+
+## Graphing my first simulated dataset
+You now want to see how your data look like. 
+```{r, echo=F, message=F}
 library(tidyverse)
+
+```
+
+
+```{r, message = F}
 aiginiteion_dep %>% 
   ggplot(aes(x = dep_score))+
   geom_histogram(position = "identity")
 ```
+
+- you don't yet need to understand this code, but I will mention a few things for those of you interested. 
+
+- library() invokes a particular bit of code that is a package of functions for doing things. In this case it calls an important superpackage that also allows me to draw the nice graphs below. 
+ 
+- aiginiteion_dep is the dataset, the %>% operator is called a "pipe" and connects it with the next line which tells it how to plot the histogram. We will get t plotting. For the moment, use it as I have put it here. 
+
+## Exercise 1.5
+You have created a histogram. What does this mean? What is the y-axis, what is the x-axis, what does the height of each bar mean in this case? 
+
+
+## Creating the control dataframe
+As I said in the beginning, I want to compare patients in Aiginiteion to those in the community and test for differences. For this purpose, I am using the same process I have used above, namely create a dataset. 
+```{r}
+set.seed(123)
+community_dep <- data.frame(
+  ids = paste0("community_",  1:n),
+  dep_score = round(rnorm(n, 8, 2), 0)
+)
+```
+
+- Notice that I have used smaller mean and sd here as I expect these to be lower in the community. But I have used the same n
+
+## Plotting the contorl dataframe
+```{r, message = F}
+community_dep %>% 
+  ggplot(aes(x = dep_score))+
+  geom_histogram(position = "identity")
+```
+
+
+
+## merge the patient and community samples 
+Now you have the two datasets, you can put them together and see what happens.
+```{r}
+combined_df <- rbind(aiginiteion_dep, community_dep)
+head(combined_df)
+tail(combined_df)
+dim(combined_df)
+
+```
+
+- in the first step, I basically stack the two dataframes on top of each other by using _rbind_, a command that says, bind rows. 
+
+- you can check what rbind did by using the _head_ and _tails_ command. This allows you to see the beginning and end of the dataframe. You will see that aiginiteion is on top and community cases at the bottom. 
+
+
+## Exercise 1.6
+use the _rbind_ function as above, but flip around its contents, having community_dep first. What do you see when you use _head_ and _tail_? What do you see when you use _dim_?
+
+- the _dim_ function tells you the dimensions of your dataframe. By conventions, dimensions are always reported as rows x columns. 
+
+## Exercise 1.7 
+change the _n_ further up in your code to n <- 1000. How many rows would you expect, how many columns? Why? Check using the _dim_function. (and put it back to n = 100)
+
+
+## Adding a new variable to the dataset.
+To make some of the subsequent analyses easier, I need to create a new variable that tells me which subjects come from the community and which from Aiginiteion.
+
+
+```{r}
+combined_df <- combined_df %>% 
+  mutate(location = case_when(str_detect(combined_df$ids, "aiginiteion")~ "aiginiteion", 
+                   str_detect(combined_df$ids, "community")~ "community") )
+
+head(combined_df)
+tail(combined_df)
+```
+
+- you don't need to understand everything here. We will explain this in future lessons. _mutate_ in this case creates the new variable _location_. And then I just use some text wrangling to say: whenever you see the word "aigniteion", e.g. "aiginiteion 10", in the _id_ column, put "aiginiteion" in the _location_ variable but whenever you see community, e.g. "community_19" in the _id_ column, put "community" in the _location variable_. 
+
+## Exercise 1.8
+What has changed in the dataset? What command would you run to answer the question?
+
+
+## Plot the combined data!
+Finally, I want to compare graphically the distributions of the two variables. 
+```{r}
+combined_df %>% 
+  ggplot(aes(dep_score, fill = location))+
+  geom_density( alpha = 0.5, bins = 100)
+  
+```
+
+- Again, no need to explain what is going on with the code here, you will learn this in due course. 
+
+- The main thing is to look at the graph. 
+
+## Exercise 1.9
+Try to interpret the graph. What is the y-axis, what is the x-axis. What does density mean? What is the darker area in the middle?
+
+
+## The question you shouldn't rush to answer
+Many of you will want to know whether the difference is statistically significant. 
+Below is the answer. Feel free to try to understand what is going on below, looking at the output. 
+I will try to convince you next time that there are better ways (for the time being) to think about differences and significance. But for the moment enjoy this.
+```{r}
+t.test(dep_score~ location, data = combined_df)
+```
+
+
