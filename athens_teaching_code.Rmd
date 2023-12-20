@@ -228,4 +228,410 @@ I will try to convince you next time that there are better ways (for the time be
 t.test(dep_score~ location, data = combined_df)
 ```
 
+## save dataframe
+
+## demonstrate how to use dataframe and each variable from it
+
+## show how you can use it to do a simple comparison of means and sds
+
+
+
+
+
+# Second Hands-On Lecture on Coding and Basic Applied Statistics 
+
+## Intro
+These are the notes from the second hands-on lecture. 
+
+We will first review the exercises from last time. Your colleague **Giannis Rokas** has prepared the notes for it. 
+
+After that, we will first learn how to 
+- import data
+- explore them 
+- subset data
+- estimate simple statistics by group
+- write our first functions
+
+**please work using a project. 
+I have described how to do this in the email.
+
+**please run first each line of code on its own so that you can get a feel of what is happening.
+
+# Creating your first project
+I will show you in the lesson how to create a project. This will be super helpful for you to work on data. 
+
+#Saving a dataframe as a csv
+```{r}
+write.csv(combined_df, "aiginiteion_data.csv", row.names=FALSE)
+```
+- Here you save the dataset you created above. 
+
+- Saving the data as a csv means you are using a universal and open source type file.
+
+## Exercise 2.1
+a) Save the dataset using a different name. Look under files on your right hand side in the project under "Files". How many new csv files do you see
+b) as you will see, when you use this command, R saves the file in the current project location. You may however want to save it in another location. For that you will need a path. Google how to use a path for write.csv in R and apply this.
+
+
+## exploring the dataset
+```{r}
+aiginiteion_data <- read_csv("aiginiteion_data.csv") 
+
+View(aiginiteion_data)
+
+dim(aiginiteion_data)
+
+head(aiginiteion_data)
+
+tail(aiginiteion_data)
+
+str(aiginiteion_data)
+```
+
+- The _read.csv_ function allows you to read the file into R.
+
+
+## how to access the dataset
+```{r}
+aiginiteion_data$ids
+aiginiteion_data$dep_score
+
+mean(aiginiteion_data$dep_score)
+sd(aiginiteion_data$dep_score)
+```
+ 
+- The _$_ sign is a function to access a named variable in a dataset
+- _mean_ is a function as is _sd_
+
+## Exercise 2.2
+Let there be two vectors, x_1 and x_2 defined as follows
+```{r}
+x_1 <- c(1:10, 11, 12)
+
+x_2 <- c(1:10, NA, 12)
+```
+
+a) run x_1 and x_2. What do you see? What does _NA_ stand for?
+b) now use the _mean_ function to obtain the mean of each vector. What happens with x_2. Why? Why is it useful that R does this?
+c) use ?_mean_ to find a solution to the problem and estimate the mean.
+
+
+# how to subset the dataset
+```{r}
+aiginiteion_data[1, ]
+
+aiginiteion_data[ ,1]
+
+aiginiteion_data[1 ,1]
+
+aiginiteion_data[aiginiteion_data$location == "aiginiteion" , ]
+
+
+aiginiteion_data[aiginiteion_data$location == "aiginiteion" , ]$dep_score
+aiginiteion_data[aiginiteion_data$location == "aiginiteion" , ]$ids
+aiginiteion_data[aiginiteion_data$location == "community" , ]$dep_score
+
+
+mean(aiginiteion_data[aiginiteion_data$location == "aiginiteion" , ]$dep_score)
+mean(aiginiteion_data[aiginiteion_data$location == "community" , ]$dep_score)
+
+
+```
+
+- subsetting a dataset is one of the most important things to learn at this stage
+
+- the tools above are like carving instruments that allow you to prepare the dataframe in exactly the way you like--in what is most interesting to you. 
+
+- remember the convention _rows, columns_
+
+##Exercise 2.3 
+a) your boss is interested in the subject Giannis Papadopoulos and wants to know his depression score. You look him up and realise he corresponds to _id_ aiginition_55. What is his depression score? Please pull out only his depression score.
+
+b) your boss is interested in a group of patients corresponding to the following aginiteion ids: 33, 44, 55, 66. how do you get those? you can use two ways. The tedious one makes use of the | , called the  _or_ operator, e.g. if you want to tell R to choose var_x == "a" | var_x == "b" it will look forany instance where either (or both) are tru. The more succinct way for multiple "or" statements is to use  _%in%_ , also called the vector memebership operator.
+
+
+
+## How to loop
+```{r}
+for(i in 1:5){
+  print("I love coding")
+}
+
+```
+
+-  As discussed, the loop is one of the oldest and most revered way of doing iterations. 
+
+## Exercise 2.4
+
+- iterate over 1000 times
+
+
+## Use a loop to find out the mean per group. 
+See my comments next to the code.
+Obviously, there are simpler ways of obtaining means and sds by group (see examples below). But loops equipe you with incredible flexibility for what you can do. Read the comments; however, the exercises will help you understand things best here.
+```{r}
+locations <- unique(aiginiteion_data$location) # run this line of code on its own.                         # what do you see? 
+
+container_means <- 0 # here you create an empty vector to act as a container
+
+container_sds <- 0 # same
+
+for(i in 1: length(locations)){ # you are just saying: please make _i_ take all the numbers from 1 to length of locations. Run 1: length(locations) on its own in the console. What do you see?
+  
+container_means[i] <-  mean(aiginiteion_data[aiginiteion_data$location == locations[i],]$dep_score)  # decompose this. It is nothing than what you have done #above already in subsetting. Except here you are using the variable you created, #locations, and subset it too. in the first loop _i_  takes up the value of 1. In #the second one it takes on the value of 2.
+
+container_sds[i] <-    sd(aiginiteion_data[aiginiteion_data$location == locations[i],]$dep_score)
+ 
+}
+
+container_means 
+container_sds
+```
+
+## Exercise 2.5. 
+It is always good to decompose code in its parts. 
+a) run this piece of code on its own. What happens? What is the output, a vector or a dataframe
+```{r}
+aiginiteion_data[aiginiteion_data$location == locations[1],]
+
+```
+
+b) now run this piece of code. What comes out now?
+```{r}
+aiginiteion_data[aiginiteion_data$location == locations[1],]$dep_score
+```
+
+
+c) now run this piece of code. What comes out now?
+```{r}
+mean(aiginiteion_data[aiginiteion_data$location == locations[1],]$dep_score)
+```
+
+d) I have only replaced i with 1 above. Now run the above using 2. What do you see 
+
+
+## other ways to obtain means by group. 
+This is FYI at the moment. You can skip it for now.
+```{r}
+
+tapply(aiginiteion_data$dep_score, aiginiteion_data$location, mean)
+
+aggregate(aiginiteion_data$dep_score, by = list(aiginiteion_data$location), mean)
+
+library(tidyverse)
+aiginiteion_data %>% 
+  group_by(location) %>% 
+  summarise(average_depression = mean(dep_score), sd_depression = sd(dep_score))
+
+
+```
+
+## Writing a function. 
+Humanity has advanced through abstractions. 
+Writing 10 = 5 + 5  refers to one possible case of y = x_1 + x_2 
+The latter can also be written as f(x1, x2) = x_1 + x_2. It is a function with two variables, called a multivariable function. 
+In R, x1 and x2 are called **arguments** of a function. 
+They are abstractions, they can take on the values we subsequently tell them to. 
+As in the case of f(x1, x2) = x_1 + x_2, where x_1 and x_2 can be any real number.
+Follow the comments next to the code below.
+```{r}
+
+my_first_function <- function(date_birth, person_name){ # function simply tells R #to create a function with the arguments being _date_birth_ and _person_name_
+age <- (Sys.Date() - as.Date(date_birth) ) # check what Sys.Date does. The function as.Date tells R to convert whatever date_birth contains into something that R can read as a date.
+
+my_age <- paste(person_name, "is", round(age/365,3), "years old") # round is an #inbuilt function to round, I put _3_ as the number of decimals to round to. 
+
+
+return(my_age) # this is very important. This is what you are asking the output of the function to be. 
+}
+my_first_function(c("1974-08-27", "2012-07-21"), c("Argyris", "Maria")) # I gave it two DOBs here and two names. run it. What comes out.
+
+
+my_first_function(c("1993-4-27", "1993-07-26"), c("Giannis", "Lampros")) # this is what you gave me.
+
+
+```
+
+
+
+## My first step towards simulating power for statistics
+The whole point of learning a language like R is so that you can test things that generic statistical software does not do, or does but in a non-transparent way. 
+You also learn it so that you don't have to do things over and over again and waste time (and make easy-to-avoid mistakes).
+Here we will create a function to do in only a line of code what we did above in several dozeens of lines: create a dataset. 
+I am not doing it in the most economical way, but rather in the way that I think is didactically better. 
+Remember the aiginiteion and the community datasets we created in our first lessons, out of which we created the combined one? If not go up and check--perhaps even copy and paste that code somewhere so you can see it as you work on the code below. 
+
+```{r}
+
+create_datasets <- function(name_gp1, name_gp2, n_gp1, n_gp2, mean_gp1, 
+                            mean_gp2, sd_gp1, sd_gp2){
+
+  #Here I just asked R to prepare a function that will take on all these #arguments. the ending gp refers to group, a generic name for any grouping
+  #and I want it to have two groups 1 and 2, and each group to be able to accept
+  # arguments for names (of the groups), n (i.e. sample size), and
+  # a mean  and an sd (of the distribution of each sample)
+  
+  
+df_1 <- data.frame(     # this is now very similar to the way I created the #aiginiteion or the community dataframe above, except I have made it be general 
+  # and correspond to the arguments I have stipulated above. 
+  
+  ids = paste0(name_gp1, "_",  1:n_gp1),
+  dep_score = round(rnorm(n_gp1, mean_gp1, sd_gp1), 0)
+)
+
+
+df_2 <- data.frame(   # same here.
+  ids = paste0(name_gp2, "_",  1:n_gp2),
+  dep_score = round(rnorm(n_gp2, mean_gp2, sd_gp2), 0))
+  
+  combined_df <- rbind(df_1, df_2) # now I only combine them.
+
+combined_df <- combined_df %>%   # as in Lesson 1, no need to worry about this for # the moment, it is a trick I am using to get a third column in there easily.
+  mutate(location = case_when(str_detect(combined_df$ids, name_gp1)~ name_gp1, 
+                   str_detect(combined_df$ids, name_gp2)~ name_gp2) )
+
+ 
+
+return(combined_df) # I want it to return me the datafram.
+
+}
+
+# OK we are done! Run now your first serious function. 
+df_result <-  create_datasets("aiginiteion", "community", 250, 250, 14, 8, 4, 4)  
+```
+
+## Exercise 2.6 
+Please run this function using the following argument paramters:
+a) the same parameters as above, and assing to df_results_sd_4
+b) the same parameters as above and SDs of 1, and assing to df_results_sd_1
+c) the same parameters as above and SDs of 8, and assing to df_results_sd_8
+
+## Plot the output of the function.
+This allows you to depict the content of your dataframes in an interesting way
+```{r}
+plot_1 <- df_result %>% 
+  ggplot(aes(dep_score, fill = location))+
+  geom_density( alpha = 0.5, bins = 100)+
+  xlim(-12, 30)
+```
+
+## Exercise 2.6 
+Please run this function using the following argument paramters:
+a) create a plot using the df_results_sd_4 data and assign it to the new object
+plot_df_results_sd_4. Do the same with sd_1 and sd_8. 
+
+b) you should now have three datasets. Run the following code.
+```{r}
+plots_list <- list(plot_df_results_sd_1, plot_df_results_sd_4, plot_df_results_sd_8)
+
+
+ggsave("plots_list.pdf", plots_list,  device = "pdf")
+```
+
+c) Inspect the new pdf that comes out as a file under your Files bit. What do you notice? 
+
+
+## Conducting my first simulation for power. Step 1. 
+We had to go through this very quickly last time. 
+We will revisit it step-by-step next time. 
+If you want to have a look at it, it is the same as the code above. 
+I have only made a little tweak. Instead of asking it to return the dataframes
+that it creates, I have asked for the results of a t-test and specifically I pulled out the p-value from that test. 
+I used a trick to do this, which you don't need to memorise and which is not important for now. But have a look.
+```{r}
+create_datasets <- function(name_gp1, name_gp2, n_gp1, n_gp2, mean_gp1, 
+                            mean_gp2, sd_gp1, sd_gp2){
+
+  
+df_1 <- data.frame(
+  ids = paste0(name_gp1, "_",  1:n_gp1),
+  dep_score = round(rnorm(n_gp1, mean_gp1, sd_gp1), 0)
+)
+
+
+df_2 <- data.frame(
+  ids = paste0(name_gp2, "_",  1:n_gp2),
+  dep_score = round(rnorm(n_gp2, mean_gp2, sd_gp2), 0))
+  
+  combined_df <- rbind(df_1, df_2)
+
+combined_df <- combined_df %>% 
+  mutate(location = case_when(str_detect(combined_df$ids, name_gp1)~ name_gp1, 
+                   str_detect(combined_df$ids, name_gp2)~ name_gp2) )
+
+ my_test <- t.test(dep_score~ location, data = combined_df)
+
+return(my_test$p.value)
+
+}
+
+```
+
+
+## Here comes the actual iteration. This is for next time. 
+```{r}
+df_result <- replicate(100, create_datasets("aiginiteion", "community", 250, 250, 14, 12, 7, 7))
+```
+
+
+
+
+####################### END HERE #######################
+
+# write a function to estimate means
+```{r}
+calculate_group_means <- function(df, var_for_group, var_outcome) {
+  
+  # Convert the grouping variable to character type
+  df[[var_for_group]] <- as.character(df[[var_for_group]])
+  
+  # Get unique levels of the grouping variable
+  group_levels <- unique(df[[var_for_group]])
+  
+  # Initialize an empty vector to store means
+  means <- 0
+  
+  # Loop over each group
+  for (i in seq_along(group_levels)) {
+    group <- group_levels[i]
+    
+    # Subset the dataframe for the current group
+    subset_data <- df[df[[var_for_group]] %in% group, ]
+    
+    # Calculate the mean of the outcome variable for the current group
+    means[i] <- mean(subset_data[[var_outcome]], na.rm = TRUE)
+  }
+  
+  # Create a data frame with group levels and corresponding means
+  result <- data.frame(
+    Group = group_levels,
+    Mean = means
+  )
+  
+  return(result)
+}
+
+# Example usage:
+# Assuming 'df' is your dataframe, 'group_var' is your grouping variable,
+# and 'outcome_var' is your continuous outcome variable
+
+
+result <- calculate_group_means(aiginiteion_data, "location", "dep_score")
+
+print(result)
+```
+
+
+
+
+
+
+
+
+```{r}
+f <- function(x) c(mean(x), sd(x))
+tapply(aiginiteion_data$dep_score, aiginiteion_data$location, f)
+```
+
+
 
