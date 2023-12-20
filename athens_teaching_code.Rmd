@@ -257,7 +257,7 @@ I have described how to do this in the email.
 
 **please run first each line of code on its own so that you can get a feel of what is happening.
 
-# Creating your first project
+## Creating your first project
 I will show you in the lesson how to create a project. This will be super helpful for you to work on data. 
 
 ## Saving a dataframe as a csv
