@@ -260,7 +260,7 @@ I have described how to do this in the email.
 # Creating your first project
 I will show you in the lesson how to create a project. This will be super helpful for you to work on data. 
 
-#Saving a dataframe as a csv
+## Saving a dataframe as a csv
 ```{r}
 write.csv(combined_df, "aiginiteion_data.csv", row.names=FALSE)
 ```
@@ -273,7 +273,7 @@ a) Save the dataset using a different name. Look under files on your right hand 
 b) as you will see, when you use this command, R saves the file in the current project location. You may however want to save it in another location. For that you will need a path. Google how to use a path for write.csv in R and apply this.
 
 
-## exploring the dataset
+## Exploring the dataset
 ```{r}
 aiginiteion_data <- read_csv("aiginiteion_data.csv") 
 
@@ -291,7 +291,7 @@ str(aiginiteion_data)
 - The _read.csv_ function allows you to read the file into R.
 
 
-## how to access the dataset
+## How to access the dataset
 ```{r}
 aiginiteion_data$ids
 aiginiteion_data$dep_score
@@ -316,7 +316,7 @@ b) now use the _mean_ function to obtain the mean of each vector. What happens w
 c) use ?_mean_ to find a solution to the problem and estimate the mean.
 
 
-# how to subset the dataset
+# How to subset the dataset
 ```{r}
 aiginiteion_data[1, ]
 
@@ -344,7 +344,7 @@ mean(aiginiteion_data[aiginiteion_data$location == "community" , ]$dep_score)
 
 - remember the convention _rows, columns_
 
-##Exercise 2.3 
+## Exercise 2.3 
 a) your boss is interested in the subject Giannis Papadopoulos and wants to know his depression score. You look him up and realise he corresponds to _id_ aiginition_55. What is his depression score? Please pull out only his depression score.
 
 b) your boss is interested in a group of patients corresponding to the following aginiteion ids: 33, 44, 55, 66. how do you get those? you can use two ways. The tedious one makes use of the | , called the  _or_ operator, e.g. if you want to tell R to choose var_x == "a" | var_x == "b" it will look forany instance where either (or both) are tru. The more succinct way for multiple "or" statements is to use  _%in%_ , also called the vector memebership operator.
@@ -520,12 +520,12 @@ Please run this function using the following argument paramters:
 a) create a plot using the df_results_sd_4 data and assign it to the new object
 plot_df_results_sd_4. Do the same with sd_1 and sd_8. 
 
-b) you should now have three datasets. Run the following code.
+b) you should now have three datasets. Run the following code after removing the #
 ```{r}
-plots_list <- list(plot_df_results_sd_1, plot_df_results_sd_4, plot_df_results_sd_8)
-
-
-ggsave("plots_list.pdf", plots_list,  device = "pdf")
+# plots_list <- list(plot_df_results_sd_1, plot_df_results_sd_4, plot_df_results_sd_8)
+# 
+# 
+# ggsave("plots_list.pdf", plots_list,  device = "pdf")
 ```
 
 c) Inspect the new pdf that comes out as a file under your Files bit. What do you notice? 
@@ -578,7 +578,7 @@ df_result <- replicate(100, create_datasets("aiginiteion", "community", 250, 250
 
 ####################### END HERE #######################
 
-# write a function to estimate means
+## write a function to estimate means
 ```{r}
 calculate_group_means <- function(df, var_for_group, var_outcome) {
   
