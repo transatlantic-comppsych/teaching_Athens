@@ -1,0 +1,198 @@
+---
+title: "Answers to the exercises of the second lesson"
+author: "Nikos Saridis"
+format: pdf
+---
+
+## Exercise 2.1
+
+a)  Save the dataset using a different name. Look under files on your right hand side in the project under "Files". How many new csv files do you see
+
+```{r}
+write.csv(combined_df, "community_data.csv", row.names = FALSE)
+```
+
+*There are two new files in the project directory, one named "aiginiteion_data.csv" and another one named "community_data.csv".*
+
+b)  as you will see, when you use this command, R saves the file in the current project location. You may however want to save it in another location. For that you will need a path. Google how to use a path for write.csv in R and apply this.
+
+```{r}
+write.csv(combined_df, "data/aigi_comm_data.csv", row.names = FALSE)
+```
+
+*First manually create the subdirectory "data" in the project location and then pass a relative path to the `file` argument.*
+
+## Exercise 2.2
+
+Let there be two vectors, x_1 and x_2 defined as follows
+
+```{r}
+x_1 <- c(1:10, 11, 12)
+
+x_2 <- c(1:10, NA, 12)
+```
+
+a)  run x_1 and x_2. What do you see? What does *NA* stand for?
+
+```{r}
+x_1
+x_2
+```
+
+*The printed values of numerical vectors `x_1` and `x_2`. `NA`, short for "Not Available", is a logical constant which contains a missing value indicator. That is how missing values are represented in R.*
+
+b)  now use the *mean* function to obtain the mean of each vector. What happens with x_2. Why? Why is it useful that R does this?
+
+```{r}
+mean(x_1)
+mean(x_2)
+```
+
+*The mean value of `x_2` is `NA`. In R `NA` doesn't represent the absence of a value, it rather represents a value that exists but is unknown. So by asking R to calculate the mean value of a numerical vector with a value that it doesn't know, it can't simply omit it. That's why the output is `NA`, it tell us that there is a mean but it can't be calculated because all the values are not known. This can be useful as it can help us identify the presence of missing values in the data.*
+
+c)  use ?*mean* to find a solution to the problem and estimate the mean.
+
+```{r}
+mean(x_2, na.rm = TRUE)
+```
+
+*One solution is changing the `na.rm` optional argument, inherent to a lot of R's functions and `FALSE` by default, to `TRUE`. This way observations with a value of `NA` are "removed" from the calculation of the mean.*
+
+## Exercise 2.3
+
+a)  your boss is interested in the subject Giannis Papadopoulos and wants to know his depression score. You look him up and realise he corresponds to *id* aiginition_55. What is his depression score? Please pull out only his depression score.
+
+```{r}
+aiginiteion_data[aiginiteion_data$ids == "aiginiteion_55", ]$dep_score
+```
+
+b)  your boss is interested in a group of patients corresponding to the following aginiteion ids: 33, 44, 55, 66. how do you get those? you can use two ways. The tedious one makes use of the \| , called the *or* operator, e.g. if you want to tell R to choose var_x == "a" \| var_x == "b" it will look forany instance where either (or both) are tru. The more succinct way for multiple "or" statements is to use *%in%* , also called the vector memebership operator.
+
+```{r}
+# Making use of the | logical operator
+aiginiteion_data[aiginiteion_data$ids == "aiginiteion_33" |
+                   aiginiteion_data$ids == "aiginiteion_44" |
+                   aiginiteion_data$ids == "aiginiteion_55" |
+                   aiginiteion_data$ids == "aiginiteion_66",
+                 ]$dep_score
+
+# Making use of the %in% vector membership operator
+aiginiteion_data[aiginiteion_data$ids %in% 
+                   c("aiginiteion_33","aiginiteion_44","aiginiteion_55",
+                     "aiginiteion_66"),
+                 ]$dep_score
+```
+
+## Exercise 2.4
+
+-   iterate over 1000 times
+
+```{r}
+#| include: false
+
+for (i in 1:1000) {
+  print("Superuseful")
+}
+```
+
+## Exercise 2.5.
+
+It is always good to decompose code in its parts. a) run this piece of code on its own. What happens? What is the output, a vector or a dataframe
+
+```{r}
+aiginiteion_data[aiginiteion_data$location == locations[1],]
+
+```
+
+*The code subsets `aiginiteion_data` data frame by using a logical expression. Only rows where `location` equals `aiginiteion`, the first value `[1]` of the `locations` vector are printed. The output is a data frame.*
+
+b)  now run this piece of code. What comes out now?
+
+```{r}
+aiginiteion_data[aiginiteion_data$location == locations[1],]$dep_score
+```
+
+*The code again subsets `aiginiteion_data` in exactly the same way, but this time it "asks" to print relevant values of the vector `dep_score`.*
+
+c)  now run this piece of code. What comes out now?
+
+```{r}
+mean(aiginiteion_data[aiginiteion_data$location == locations[1],]$dep_score)
+```
+
+*The mean value of `dep_score` for `location` aiginiteion. This time we passed the vector from above to the `mean()` function.*
+
+d)  I have only replaced i with 1 above. Now run the above using 2. What do you see
+
+```{r}
+mean(aiginiteion_data[aiginiteion_data$location == locations[2], ]$dep_score)
+```
+
+*This time we get the mean value of `dep_score` for `location` community. This happens, as in the logical expression `aiginiteion_data$location == locations` we choose the (subset by) second value `[2]` of the `locations` vector.*
+
+## Exercise 2.6
+
+Please run this function using the following argument paramters:
+
+a)  the same parameters as above, and assing to df_results_sd_4
+
+```{r}
+df_results_sd_4 <- create_datasets("aiginiteion", "community", 250, 250, 14, 8, 4, 4)
+```
+
+b)  the same parameters as above and SDs of 1, and assing to df_results_sd_1
+
+```{r}
+df_results_sd_1 <- create_datasets("aiginiteion", "community", 250, 250, 14, 8, 1, 1)
+```
+
+c)  the same parameters as above and SDs of 8, and assing to df_results_sd_8
+
+```{r}
+df_results_sd_8 <- create_datasets("aiginiteion", "community", 250, 250, 14, 8, 8, 8)
+```
+
+## Exercise 2.7
+
+Please run this function using the following argument paramters:
+
+a)  create a plot using the df_results_sd_4 data and assign it to the new object plot_df_results_sd_4. Do the same with sd_1 and sd_8.
+
+```{r}
+#| warning: false
+
+plot_df_results_sd_4 <- df_results_sd_4 %>% 
+    ggplot(aes(dep_score, fill = location)) +
+    geom_density(alpha = 0.5, bins = 100) +
+    xlim(-12, 30)
+
+plot_df_results_sd_1 <- df_results_sd_1 %>% 
+    ggplot(aes(dep_score, fill = location)) +
+    geom_density(alpha = 0.5, bins = 100) +
+    xlim(-12, 30)
+
+plot_df_results_sd_8 <- df_results_sd_8 %>% 
+    ggplot(aes(dep_score, fill = location)) +
+    geom_density(alpha = 0.5, bins = 100) +
+    xlim(-12, 30)
+```
+
+b)  you should now have three datasets. Run the following code after removing the \#
+
+```{r}
+#| include: false
+
+plots_list <- list(plot_df_results_sd_1, plot_df_results_sd_4, plot_df_results_sd_8)
+
+
+#ggsave("plots_list.pdf", plots_list, device = "pdf")
+
+# A different approach approach as the code above outputs an error
+pdf("plots_list.pdf")
+plots_list
+dev.off()
+```
+
+c)  Inspect the new pdf that comes out as a file under your Files bit. What do you notice?
+
+*The density histograms we created for `dep_score` for each data frame are saved in the pdf. In `...sd_1` there is no overlap of `dep_score` values between aiginiteion and community observations. In `...sd_4` there is some overlap for `dep_score` values, as is the case for `...sd_8` where it is even more pronounced. Some observations in the last histogram are not depicted because of the `xlim()` layer in the graphics function.*
