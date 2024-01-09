@@ -575,6 +575,30 @@ df_result <- replicate(100, create_datasets("aiginiteion", "community", 250, 250
 
 
 
+# Third Hands-On Lecture on Coding and Basic Applied Statistics 
+
+## Summary  
+We mainly went through the exercises from last time that Nikos had prepared. 
+I have the following exercises for next time. 
+
+
+## Exercise 3.1
+write a function that takes a dataframe as an argument and returns a dataframe containing the n (number of observations), mean, standard deviation, median and inter-quartile ranges for specified columns of the dataframe.
+Please write your own function; you may use  inbuilt ones as you do so (e.g. mean()), but it would be idea if you created them yourself.
+## Exercise 3.2
+Modify the function you created so that it can be applied across different groups, e.g. the mean of group a and group b.
+## Exercise 3.3
+Please import the dataset for_athens_teaching_hands_on_exercises_3.csv 
+Describe its dimensions and structure of its variables. 
+This dataframe contains all the data from RCTs in either psychotherapy or medication trials and has both arms, active and controls.
+## Exercise 3.4
+Use your function on the  cohens_d variable of the dataframe for_athens_teaching_hands_on_exercises_3, across the four_level_variable.
+## Exercise 3.5 (optional)
+Graph this realationship, ideally encoding the size of the study (baseline_n) in the graph (e.g. as bubble size). 
+## Exercise 3.6
+Write a short report of your findings. 
+
+
 
 ####################### END HERE #######################
 
@@ -620,11 +644,6 @@ result <- calculate_group_means(aiginiteion_data, "location", "dep_score")
 
 print(result)
 ```
-
-
-
-
-
 
 
 
