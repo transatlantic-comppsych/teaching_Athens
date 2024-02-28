@@ -665,3 +665,130 @@ tapply(aiginiteion_data$dep_score, aiginiteion_data$location, f)
 
 
 
+
+## 4. General points about regression
+
+We discussed last time some of the fundamental maths, e.g. partial derivatives for the least squares. 
+Today, we are going to start with a very simple problem about predicting. 
+
+
+```{r}
+library(tidyverse)
+df_height_weight_all <- read.csv("~/teaching_athens/df_height_weight.csv")
+
+
+df_height_weight_all$height_cm <- df_height_weight_all$Height.Inches*2.54
+
+df_height_weight_all$weight_kg <- df_height_weight_all$Weight.Pounds.*0.45359237
+
+
+df_height_weight_all  <- df_height_weight_all %>% 
+  dplyr:: select(-c(Height.Inches., Weight.Pounds.))
+
+
+#what did I do here?
+df_height_weight_train <- df_height_weight_all[sample(nrow(df_height_weight_all), nrow(df_height_weight_all)*0.1),]
+
+
+
+
+
+df_height_weight_train %>% 
+  ggplot(aes(height_cm, weight_kg))+
+  geom_point()
+
+
+overall_model <- lm(weight_kg  ~ height_cm, df_height_weight_train  )
+summary(overall_model)
+
+overall_model_predictor_scaled <- lm(weight_kg  ~ scale(height_cm), df_height_weight_train  )
+summary(overall_model_predictor_scaled)
+
+overall_model_fully_scaled <- lm(scale(weight_kg)  ~ scale(height_cm), df_height_weight_train  )
+summary(overall_model_fully_scaled)
+
+cor.test(df_height_weight_train $weight_kg, df_height_weight_train $height_cm)
+
+predicted_values <- predict (overall_model)
+
+df_pred_actual <- data.frame(predicted_values = predicted_values, 
+                             actual_values = df_height_weight_train $weight_kg)
+
+
+head(df_pred_actual)
+
+
+# what is the mean absolute error
+df_pred_actual$abs_error <- abs(df_pred_actual$predicted_values - df_pred_actual$actual_values)
+mean(df_pred_actual$abs_error)
+
+
+#find the mean squared error
+
+
+# find the R_squared
+
+# the plot in base R
+plot(x = predict (overall_model), y = df_height_weight_train$weight_kg)
+abline(a = 0,                                        
+       b = 1,
+       col = "red",
+       lwd = 2)
+
+
+# create test data
+df_test <- setdiff(df_height_weight_all, df_height_weight_train)
+
+dim(df_test)
+
+df_test <- df_test[sample(nrow(df_test), nrow(df_test)*0.01),]
+
+dim(df_test)
+
+out_of_sample_pred_values <- predict(overall_model, df_test)
+
+
+#MAE 
+mean(abs(df_test$weight_kg - out_of_sample_pred_values))
+
+
+#### Do k-fold cross-validation
+
+
+num_folds <- 5
+
+num_rows <- nrow(df_height_weight_train)
+
+
+fold_indices <- sample(rep(1:num_folds, length.out = num_rows))
+
+# Create vectors to store results
+cv_abs_errors <- 0
+
+# Perform 5-fold cross-validation
+for (i in 1:num_folds) {
+  
+  # each test dataset
+  fold_data <- df_height_weight_train[fold_indices == i, ]
+  
+  # the training set
+  train_data <- df_height_weight_train[fold_indices != i, ]
+  
+
+  lm_model <- lm(weight_kg  ~ height_cm, data = train_data)
+  
+
+  predictions <- predict(lm_model, newdata = fold_data)
+  
+
+  cv_abs_errors[i] <- mean(abs(fold_data$weight_kg - predictions))
+}
+
+# Calculate the average cross-validation error
+average_cv_abs_error <- mean(cv_abs_errors)
+
+average_cv_abs_error
+
+
+```
+
