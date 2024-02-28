@@ -762,7 +762,7 @@ num_rows <- nrow(df_height_weight_train)
 
 fold_indices <- sample(rep(1:num_folds, length.out = num_rows))
 
-# Create vectors to store results
+
 cv_abs_errors <- 0
 
 # Perform 5-fold cross-validation
