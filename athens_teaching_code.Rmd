@@ -674,52 +674,96 @@ Today, we are going to start with a very simple problem about predicting.
 
 ```{r}
 library(tidyverse)
-df_height_weight_all <- read.csv("~/teaching_athens/df_height_weight.csv")
 
+# Import the data
+df_height_weight_all <- read.csv("df_height_weight.csv")
 
+# Compute a new variable for height, measured in centimeters
 df_height_weight_all$height_cm <- df_height_weight_all$Height.Inches*2.54
 
+# Compute another new variable for weight, measured in kilograms
 df_height_weight_all$weight_kg <- df_height_weight_all$Weight.Pounds.*0.45359237
 
-
+# Drop the variables that count height in inches and weight in pounds
 df_height_weight_all  <- df_height_weight_all %>% 
   dplyr:: select(-c(Height.Inches., Weight.Pounds.))
 
-
-#what did I do here?
+# Sample 10% of the data, at random, without replacement 
+# to create a new training dataframe
 df_height_weight_train <- df_height_weight_all[sample(nrow(df_height_weight_all), nrow(df_height_weight_all)*0.1),]
 
-
-
-
-
-df_height_weight_train %>% 
-  ggplot(aes(height_cm, weight_kg))+
+# Create a scatter plot of weight vs height
+train_plt_height_weight <- df_height_weight_train %>%
+  ggplot(aes(height_cm, weight_kg)) +
   geom_point()
 
+train_plt_height_weight
 
-overall_model <- lm(weight_kg  ~ height_cm, df_height_weight_train  )
+# Add a regression line
+train_plt_height_weight +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE)
+
+# Create a simple linear model
+overall_model <- lm(weight_kg  ~ height_cm, df_height_weight_train)
 summary(overall_model)
 
+# Create a linear model with height scaled
 overall_model_predictor_scaled <- lm(weight_kg  ~ scale(height_cm), df_height_weight_train  )
 summary(overall_model_predictor_scaled)
 
+# We could scale/normalize height manually
+norm_height <- (df_height_weight_train$height_cm
+                -mean(df_height_weight_train$height_cm)) / sd(df_height_weight_train$height_cm)
+
+mean(norm_height)
+
+sd(norm_height)
+
+# The scaled height variable should look a lot like a standarized
+# normal distribution
+std_normal_dist <- rnorm(n = 15000, mean = 0, sd = 1)
+
+as.data.frame(std_normal_dist) %>%
+  ggplot(aes(std_normal_dist)) +
+  geom_histogram()
+
+as.data.frame(norm_height) %>%
+  ggplot(aes(norm_height)) +
+  geom_histogram()
+
+# Create a linear model where both weight and height are scaled
 overall_model_fully_scaled <- lm(scale(weight_kg)  ~ scale(height_cm), df_height_weight_train  )
 summary(overall_model_fully_scaled)
 
+# Can you notice the similarities?
 cor.test(df_height_weight_train $weight_kg, df_height_weight_train $height_cm)
 
-predicted_values <- predict (overall_model)
+# Compute the weight values on the regression line for every observation
+# from the simple model
+predicted_values <- predict(overall_model)
 
+# Can you notice the differences between the predicted/fitted values
+# and the actual values observed?
 df_pred_actual <- data.frame(predicted_values = predicted_values, 
                              actual_values = df_height_weight_train $weight_kg)
 
 
 head(df_pred_actual)
 
+# Plot actual vs predicted (fitted) values
+plt_act_pred <- df_pred_actual %>%
+  ggplot(aes(predicted_values, actual_values)) +
+  geom_point()
 
-# what is the mean absolute error
+plt_act_pred
+
+# Add a regression line
+plt_act_pred +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE)
+
+# What is the mean absolute error?
 df_pred_actual$abs_error <- abs(df_pred_actual$predicted_values - df_pred_actual$actual_values)
+
 mean(df_pred_actual$abs_error)
 
 
